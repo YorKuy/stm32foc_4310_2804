@@ -1,0 +1,9 @@
+# clangd 工程配置。
+#
+# CubeMX 的 CMakePresets.json 用 binaryDir = ${sourceDir}/build/${presetName}，
+# 编译数据库落在 build/Debug/ —— 比 clangd 默认会找的 build/compile_commands.json
+# 深一层，必须显式指定，否则一个 -I 都没有、跳转全部失效。
+#
+# 路径相对本文件所在目录，不要写成绝对路径，否则换机器就失效。
+CompileFlags:
+  CompilationDatabase: build/Debug

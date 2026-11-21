@@ -1,0 +1,25 @@
+{
+    // ── 为什么这里刻意不写 clangd 的 path / arguments ──────────────────────
+    // 用户设置（~/.config/Code/User/settings.json）里已经给好全局默认：
+    //   stm32cube-ide-clangd.path      = ${userHome}/.local/bin/starm-clangd
+    //   stm32cube-ide-clangd.arguments = --compile-commands-dir=${workspaceFolder}/build/Debug
+    //                                   --query-driver=/**/arm-none-eabi-gcc*,...
+    // 工程级设置会**覆盖**用户级设置，所以这里再写一遍（或写错）就会把它顶掉。
+    // 本文件原先抄了 CubeMX 模板的 "stm32cube-ide-clangd.path": "cube"：
+    // 扩展宿主的 PATH 里没有 cube（它只在 STM32Cube core 扩展的 binaries 目录里），
+    // clangd 启动失败 → 跳转定义、悬停、诊断全部失效。
+    // 编译数据库位置改由工程根目录的 .clangd 指定，与打开的是哪个文件夹无关。
+    //
+    // 工程级只做一件事：关掉微软 C/C++ 扩展的 IntelliSense，避免两个语言引擎抢 F12。
+    // 想切回 cpptools：把下面改成 "default"（全局已配 configurationProvider=cmake-tools）。
+    "C_Cpp.intelliSenseEngine": "disabled",
+
+    // ── CMake Tools（与导航无关，沿用 CubeMX 工程模板的写法）──
+    "cmake.cmakePath": "cube-cmake",
+    "cmake.configureArgs": [
+        "-DCMAKE_COMMAND=cube-cmake"
+    ],
+    "cmake.preferredGenerators": [
+        "Ninja"
+    ]
+}

@@ -1,0 +1,12 @@
+{
+  "collection": "ms_software_1f3f30f9",
+  "last_started_at": "2026-11-19T09:17:39.345672Z",
+  "milvus_uri": "~/.memsearch/milvus.db",
+  "operation": "index",
+  "paths": [
+    "/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/.memsearch/memory"
+  ],
+  "schema_version": 1,
+  "status": "running",
+  "updated_at": "2026-11-19T09:17:39.345672Z"
+}
