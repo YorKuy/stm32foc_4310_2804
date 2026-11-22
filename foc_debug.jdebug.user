@@ -3,20 +3,35 @@
 GraphedExpression="Ta_dbg", Color=#e56a6f
 GraphedExpression="Tb_dbg", Color=#35792b
 GraphedExpression="Tc_dbg", Color=#769dda
-OpenDocument="MagneticSensor.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/USER/MagneticSensor.c", Line=114
-OpenDocument="main.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Src/main.c", Line=383
+GraphedExpression="(test).target", Color=#b14f0d, Show=0
+GraphedExpression="(test).now", Color=#b3c38e, Show=0
+GraphedExpression="targetVotage", Color=#ab7b05, Show=0
+OpenDocument="MagneticSensor.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/USER/MagneticSensor.c", Line=168
+OpenDocument="stm32f1xx_hal_gpio.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c", Line=425
+OpenDocument="foc_utils.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/USER/foc_utils.c", Line=28
+OpenDocument="FOCMotor.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/USER/FOCMotor.c", Line=0
+OpenDocument="stm32f1xx_hal_uart.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c", Line=2683
+OpenDocument="BLDCMotor.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/USER/BLDCMotor.c", Line=336
+OpenDocument="main.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Src/main.c", Line=516
+OpenDocument="stm32f1xx_it.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Src/stm32f1xx_it.c", Line=85
+OpenDocument="stm32f1xx_hal.c", FilePath="/home/yorkuy/Code/foc_leg_lab/foc-wheel-legged-robot/stm32-foc/software/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c", Line=283
 OpenToolbar="Debug", Floating=0, x=0, y=0
-OpenWindow="Source Files", DockArea=LEFT, x=0, y=1, w=269, h=365, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=488, h=89, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=0, w=269, h=417, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Data Sampling", DockArea=RIGHT, x=0, y=2, w=488, h=226, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
-OpenWindow="Timeline", DockArea=RIGHT, x=0, y=1, w=488, h=461, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="20 ms / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="295;0", DataGraphShowNamesAtCursor=0, PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="905;0", CodeGraphLegendShown=0, CodeGraphLegendPosition="922;0"
-OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=1920, h=152, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Call Stack", DockArea=LEFT, x=0, y=1, w=348, h=313, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Source Files", DockArea=BOTTOM, x=0, y=0, w=300, h=135, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=1290, h=128, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=2, y=0, w=803, h=135, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=0, w=348, h=486, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Data Sampling", DockArea=RIGHT, x=0, y=2, w=1290, h=233, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
+OpenWindow="Timeline", DockArea=RIGHT, x=0, y=1, w=1290, h=432, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="50 ms / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="1098;0", DataGraphShowNamesAtCursor=0, PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="576;-3", CodeGraphLegendShown=0, CodeGraphLegendPosition="551;0"
+OpenWindow="Console", DockArea=BOTTOM, x=1, y=0, w=805, h=135, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
+TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[253;112;112;100;168;100]
 TableHeader="Source Files", SortCol="File", SortOrder="DESCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[239;100;100;100;938]
-TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" Ta_dbg";" Tb_dbg";" Tc_dbg"], ColWidths=[100;100;100;100;100]
-TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[100;100;100;100;100;100;100;100;100]
+TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" Ta_dbg";" Tb_dbg";" Tc_dbg";" (test).target";" (test).now";" targetVotage"], ColWidths=[100;100;100;100;100;100;100;100]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[100;100;100;100;100;100;100;105;485]
 TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
 TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[100;100;100;100]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
 TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[200;100;100;359]
+WatchedExpression="test", Window=Watched Data 1
+WatchedExpression="targetSpeed", Window=Watched Data 1

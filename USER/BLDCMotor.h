@@ -1,6 +1,8 @@
 #ifndef BLDCMotor_H
 #define BLDCMotor_H
 
+#include <stdint.h>
+
 /******************************************************************************/
 /**
  *  Direction structure
@@ -16,6 +18,9 @@ typedef enum
 extern long sensor_direction;
 extern float voltage_power_supply;
 extern float Ta_dbg, Tb_dbg, Tc_dbg;
+/* PWM 同步更新缓冲（定义在 BLDCMotor.c）：setPhaseVoltage 只存值，TIM2 更新中断负责装载 */
+extern volatile float pwmCcrA, pwmCcrB, pwmCcrC;
+extern volatile uint8_t pwmPending;
 extern float voltage_limit;
 extern float voltage_sensor_align;
 extern int  pole_pairs;

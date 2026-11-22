@@ -17,7 +17,16 @@
 #define M1_Disable HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET)
 #define PWM_Period 1280
 
+/* ===== 相位超前补偿（换相用）=====
+ * 从 AS5600 读出角度，到 CCR 真正生效，中间有约 0.3~0.5 ms 延迟
+ * （软件 I2C 读角 + 主循环 + PWM 更新）。高速时这点延迟会变成电角度滞后：
+ * 300rpm / 14 对极时约 10 度，转矩按 cos(delta) 下降、脉动变大。
+ * 这里按机械转速把电角度往前推 omega_elec * T_COMP 做补偿（转速为 0 时补偿为 0，不影响标定）。 */
+#define PHASE_ADV_ENABLE 1
+#define PHASE_ADV_TC     0.0004f   /* 等效延迟(s)，0.3~0.5ms 之间微调 */
+
 extern float target;
+extern float speed;   /* 机械转速(rpm)，定义在 main.c，供相位超前补偿使用 */
 
 long sensor_direction;
 float voltage_power_supply;
@@ -28,6 +37,11 @@ unsigned long open_loop_timestamp;
 float velocity_limit;
 /* 调试用：把 setPhaseVoltage 算出的三相占空比暴露到全局，方便在 main 里打印 */
 float Ta_dbg, Tb_dbg, Tc_dbg;
+/* PWM 同步更新缓冲：setPhaseVoltage 只计算并存入，由 TIM2 更新中断在载波零点统一写 CCR。
+ * 主循环里直接写 CCR 会让更新时刻落在载波周期中途，同一周期的三相脉冲宽度对应不同时刻的
+ * 电角度 → 脉冲不对称 → 高速时表现为转矩脉动（用户说的"换相感"）。 */
+volatile float pwmCcrA, pwmCcrB, pwmCcrC;   /* 已换算成比较值(0~PWM_Period)的三相占空比 */
+volatile uint8_t pwmPending;                /* 1 = 有新的比较值等待装载 */
 
 int alignSensor(void);
 float velocityOpenloop(float target_velocity);
@@ -116,7 +130,7 @@ static void PrintFloat4(const char *tag, float v)
 	if(fp < 0) fp = -fp;
 	printf("%s%d.%04ld\r\n", tag, (int)ip, (long)fp);
 }
-
+//角度测量
 int alignSensor(void)
 {
 	/* 探针量：正转一圈后的机械角、反转回来后的机械角、以及两者之差 */
@@ -253,6 +267,13 @@ void loopFOC(void)
 	
 	shaft_angle = shaftAngle();// shaft angle
 	electrical_angle = electricalAngle();// electrical angle - need shaftAngle to be called first
+
+#if PHASE_ADV_ENABLE
+	/* 相位超前补偿：电角度 = 电角度 + omega_elec * T_COMP，抵消"读角→PWM 生效"的延迟。
+	 * omega_elec(rad/s) = speed(rpm) * 2pi/60 * pole_pairs */
+	if(speed != 0.0f)
+		electrical_angle = _normalizeAngle(electrical_angle + speed * (2.0f*_PI/60.0f) * pole_pairs * PHASE_ADV_TC);
+#endif
 	
 	switch(torque_controller)
 	{
@@ -284,19 +305,6 @@ void setTargetVotage(float new_target)
  *   - 2 个零矢量（三相全接电源 / 全接地），输出电压为 0。
  * 想要的方向一定落在某个 60 度扇区内，于是就在一个 PWM 周期里让"扇区两侧的两个相邻矢量"
  * 和"零矢量"分时输出，按伏秒积分等效地把目标矢量合成出来。
- *
- * 参数语义（注意是旋转坐标系的分量，不是某一相的电压）：
- *   Uq       —— q 轴电压分量，等于力矩指令，setTargetVotage() 只写这一项；
- *   Ud       —— d 轴电压分量，用于励磁/弱磁，本固件恒为 0，所以只走 else 分支；
- *   angle_el —— 转子电角度（electricalAngle() 的输出），决定 q 轴在空间中的方向。
- *
- * 单位约定：Uq/Ud 单位为 V；Uout 是"矢量幅值 / 母线电压"归一化后的调制深度。
- * 线性调制上限为 1/sqrt(3)≈0.577，超过它合成矢量会顶出六边形边界（过调制），
- * 波形失真、电流失控，所以下面直接钳位。本工程母线 12V、voltage_limit=MAX_VOLT=6.9V，
- * 正好是 12/sqrt(3)，正常指令不会越界，钳位只是最后一道保险。
- *
- * 调用者：loopFOC()（每个控制周期）、alignSensor()（发开环旋转矢量做标定）、
- *         Beep_IRQHandler()（给一个固定方向来回翻转，让线圈发出蜂鸣声）。
  */
 void setPhaseVoltage(float Uq, float Ud, float angle_el)
 {
@@ -331,9 +339,6 @@ void setPhaseVoltage(float Uq, float Ud, float angle_el)
 		/* +PI/2 把"转子 d 轴方向"换算成"电压矢量方向" */
 		angle_el = _normalizeAngle(angle_el + _PI_2);
 	}
-	/* 调制深度钳位到正负 1/sqrt(3)≈0.577。
-	 * 这是三相 SVPWM 不过调制时能输出的最大相电压峰值（= Vbus/sqrt(3)），
-	 * 也是母线电压利用率的上限；三相占空比因此始终落在 0~1 之间，不会写出非法比较值 */
 	if(Uout> 0.577)Uout= 0.577;
 	if(Uout<-0.577)Uout=-0.577;
 	
@@ -396,13 +401,11 @@ void setPhaseVoltage(float Uq, float Ud, float angle_el)
 			Tc = 0;
 	}
 	
-	/* 把占空比写进定时器比较寄存器。TIM2 预分频=0、自动重装载值 PWM_Period=1280，
-	 * 所以比较值 = 占空比*1280（计数时钟 64MHz、中心对齐模式，PWM 频率 = 64MHz/(2*1280) = 25kHz）；
-	 * 0 表示整周期低电平，1280 表示接近整周期高电平。
-	 * 三个通道对应 DRV8313 的 IN1/IN2/IN3，由它驱动三相半桥；本板无电流环，
-	 * 输出电压近似正比于力矩，所以这里就是最终的执行量 */
 	Ta_dbg = Ta; Tb_dbg = Tb; Tc_dbg = Tc; // 调试：抄一份给 main 打印
-	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_1,Ta*PWM_Period);
-	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_2,Tb*PWM_Period);
-	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_3,Tc*PWM_Period);
+
+	/* 不在这里直接写 CCR：存进缓冲并置标志，由 TIM2 更新中断（载波零点）统一装载 */
+	pwmCcrA = Ta*PWM_Period;
+	pwmCcrB = Tb*PWM_Period;
+	pwmCcrC = Tc*PWM_Period;
+	pwmPending = 1;
 }
